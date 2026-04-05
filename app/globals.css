@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────
+   TAILWIND V4 — CSS-first theme config
+   Aquí viven todos los tokens del diseño.
+   Genera automáticamente: bg-*, text-*, border-*, font-*
+───────────────────────────────────────── */
+@theme {
+  /* Colores */
+  --color-cvai-bg:           #07090F;
+  --color-cvai-bg2:          #0D1120;
+  --color-cvai-bg3:          #111827;
+  --color-cvai-indigo:       #6366F1;
+  --color-cvai-indigo-light: #818CF8;
+  --color-cvai-indigo-dim:   rgba(99, 102, 241, 0.12);
+  --color-cvai-teal:         #14B8A6;
+  --color-cvai-teal-dim:     rgba(20, 184, 166, 0.12);
+  --color-cvai-border:       rgba(255, 255, 255, 0.06);
+  --color-cvai-border2:      rgba(255, 255, 255, 0.10);
+  --color-cvai-text1:        #F1F5F9;
+  --color-cvai-text2:        rgba(241, 245, 249, 0.55);
+  --color-cvai-text3:        rgba(241, 245, 249, 0.30);
+
+  /* Fuentes */
+  --font-syne: var(--font-syne-var), sans-serif;
+  --font-dm:   var(--font-dm-var), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─────────────────────────────────────────
+   BASE
+───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #07090F;
+  color: #F1F5F9;
+  overflow-x: hidden;
 }
+
+/* ─────────────────────────────────────────
+   GRID DE FONDO
+───────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ─────────────────────────────────────────
+   ANIMACIONES
+───────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+.animate-delay-100  { animation-delay: 0.1s; opacity: 0; }
+.animate-delay-200  { animation-delay: 0.2s; opacity: 0; }
+.animate-delay-300  { animation-delay: 0.3s; opacity: 0; }
+.animate-blink      { animation: blink 1s infinite; }
