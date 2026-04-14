@@ -1785,3 +1785,274 @@ textarea.field-input {
   .job-affinity-badge { align-self: flex-start; }
 }
 
+/* ════════════════════════════════════════════════
+   CV.AI — AppShell + navigation + quick actions
+   Append to globals.css
+   ════════════════════════════════════════════════ */
+
+/* ─── Shell root ──────────────────────────────────── */
+.shell-root {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-navy, #0a0e1a);
+}
+
+/* ─── Sidebar ─────────────────────────────────────── */
+.shell-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: rgba(17, 24, 39, 0.6);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) { .shell-sidebar { display: none; } }
+
+.shell-logo {
+  font-family: var(--font-display-var);
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  color: var(--color-text);
+  padding: 0 8px;
+  margin-bottom: 32px;
+}
+.shell-logo span { color: var(--color-accent); }
+
+/* ─── Nav items ───────────────────────────────────── */
+.shell-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+  position: relative;
+  cursor: pointer;
+}
+.shell-nav-item:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+.shell-nav-item--active {
+  color: var(--color-text);
+  background: rgba(59, 130, 246, 0.1);
+  font-weight: 600;
+}
+
+.shell-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.shell-nav-label { flex: 1; }
+
+.shell-nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ─── Sidebar user section ────────────────────────── */
+.shell-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px;
+  border-top: 1px solid var(--color-border);
+  margin-top: 16px;
+}
+
+.shell-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.shell-user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.shell-user-info { flex: 1; min-width: 0; }
+.shell-user-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shell-user-role {
+  font-size: 0.68rem;
+  color: var(--color-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shell-signout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-muted);
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.shell-signout:hover { color: #fca5a5; }
+
+/* ─── Main content area ───────────────────────────── */
+.shell-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+/* ─── Mobile top bar ──────────────────────────────── */
+.shell-topbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(10, 14, 26, 0.95);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+@media (max-width: 768px) { .shell-topbar { display: flex; } }
+
+.shell-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+}
+
+/* ─── Mobile menu overlay ─────────────────────────── */
+.shell-mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+.shell-mobile-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background: var(--color-card);
+  border-right: 1px solid var(--color-border);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ─── Dashboard page ──────────────────────────────── */
+.dash-page {
+  padding: 36px 32px 64px;
+  max-width: 1100px;
+}
+
+@media (max-width: 640px) {
+  .dash-page { padding: 24px 16px 48px; }
+}
+
+/* ─── Quick actions ───────────────────────────────── */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-card);
+  text-decoration: none;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.quick-action--blue:hover  { border-color: var(--color-accent); }
+.quick-action--green:hover { border-color: #22c55e; }
+.quick-action--purple:hover{ border-color: #a78bfa; }
+
+.quick-action-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.quick-action-icon--blue   { background: rgba(59, 130, 246, 0.12); color: var(--color-accent); }
+.quick-action-icon--green  { background: rgba(34, 197, 94, 0.12);  color: #22c55e; }
+.quick-action-icon--purple { background: rgba(167, 139, 250, 0.12); color: #a78bfa; }
+
+.quick-action-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+.quick-action-desc {
+  font-size: 0.73rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+.quick-action-arrow {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
