@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
@@ -140,32 +142,57 @@ export default function CvFormPage() {
   }
 
   // ── Final submit ───────────────────────────────
-  async function handleSubmit() {
-    setSaving(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.push('/login'); return }
+ async function handleSubmit() {
+  setSaving(true)
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) { router.push('/login'); return }
 
-    // Upsert profile in Supabase
-    const { error } = await supabase.from('profiles').upsert({
-      id: user.id,
-      full_name:   form.fullName,
-      job_title:   form.jobTitle,
-      summary:     form.summary,
-      photo_url:   form.photoUrl,
-      contact:     form.contact,
-      experience:  form.experience,
-      education:   form.education,
+  // 1. Guardar/actualizar perfil del usuario
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .upsert({
+      id:             user.id,
+      full_name:      form.fullName,
+      job_title:      form.jobTitle,
+      summary:        form.summary,
+      photo_url:      form.photoUrl,
+      contact:        form.contact,
+      experience:     form.experience,
+      education:      form.education,
       certifications: form.certifications,
-      languages:   form.languages,
-      updated_at:  new Date().toISOString(),
+      languages:      form.languages,
+      updated_at:     new Date().toISOString(),
     })
 
+  if (profileError) {
+    console.error('[cv-form] Profile save error:', profileError)
     setSaving(false)
-    if (!error) {
-      sessionStorage.removeItem('cv_parsed')
-      router.push('/dashboard')
-    }
+    return
   }
+
+  // 2. Crear el documento CV en cv_documents
+  //    Esto es lo que alimenta el dashboard y la descarga.
+  const { error: cvError } = await supabase
+    .from('cv_documents')
+    .insert({
+      user_id:  user.id,
+      title:    form.fullName
+        ? `CV - ${form.fullName}`
+        : 'Mi CV',
+      language: 'es',
+      status:   'complete',
+      content:  form,               // CvFormData completo como JSONB
+    })
+
+  setSaving(false)
+
+  if (!cvError) {
+    sessionStorage.removeItem('cv_parsed')
+    router.push('/dashboard')
+  } else {
+    console.error('[cv-form] CV document save error:', cvError)
+  }
+}
 
   // ── Progress ───────────────────────────────────
   const progress = Math.round(((step - 1) / STEPS.length) * 100)

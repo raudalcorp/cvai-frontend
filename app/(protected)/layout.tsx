@@ -1,6 +1,10 @@
 // app/(protected)/layout.tsx
-// Server Component — fetches user once for the entire protected area,
-// passes it to AppShell so the sidebar always has current data.
+//
+// Este es un layout ANIDADO — no reemplaza app/layout.tsx.
+// Next.js los apila: app/layout.tsx → (protected)/layout.tsx → page.tsx
+//
+// Solo agrega AppShell (sidebar + nav) a las rutas protegidas.
+// NO contiene <html> ni <body>.
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
@@ -12,7 +16,6 @@ export default async function ProtectedLayout({
   children: React.ReactNode
 }) {
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 

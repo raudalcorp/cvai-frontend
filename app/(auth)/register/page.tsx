@@ -1,10 +1,12 @@
 'use client'
 
+// app/(auth)/register/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 
-// ─── Process step config ───────────────────────
 const PROCESS_STEPS = [
   { label: 'Completar\nformulario' },
   { label: 'Seleccionar\nformato' },
@@ -23,7 +25,6 @@ export default function RegisterPage() {
   const [error, setError]       = useState<string | null>(null)
   const [success, setSuccess]   = useState(false)
 
-  // ── Email/password register ──────────────────
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
@@ -34,26 +35,18 @@ export default function RegisterPage() {
       password,
       options: {
         data: { full_name: fullName },
-        // After email confirmation Supabase redirects here
         emailRedirectTo: `${location.origin}/auth/callback?next=/onboarding`,
       },
     })
 
     setLoading(false)
-    if (error) {
-      setError(error.message)
-    } else {
-      setSuccess(true)
-    }
+    if (error) { setError(error.message) } else { setSuccess(true) }
   }
 
-  // ── Google OAuth ─────────────────────────────
   async function handleGoogle() {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/auth/callback?next=/onboarding`,
-      },
+      options: { redirectTo: `${location.origin}/auth/callback?next=/onboarding` },
     })
   }
 
@@ -66,7 +59,6 @@ export default function RegisterPage() {
           <p className="auth-sub">
             Enviamos un enlace de confirmación a{' '}
             <strong className="auth-email-highlight">{email}</strong>.
-            Haz clic en él para activar tu cuenta.
           </p>
           <Link href="/login" className="btn-primary w-full text-center mt-4 block">
             Ir a iniciar sesión
@@ -83,85 +75,38 @@ export default function RegisterPage() {
         <p className="auth-sub">Optimiza y valida tu CV con inteligencia artificial</p>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
-          {/* Full name */}
           <div className="field-group">
-            <label className="field-label" htmlFor="fullName">
-              Nombre completo
-            </label>
-            <input
-              id="fullName"
-              type="text"
-              required
-              placeholder="Gerald Hurtado"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="field-input"
-            />
+            <label className="field-label" htmlFor="fullName">Nombre completo</label>
+            <input id="fullName" type="text" required placeholder="Gerald Hurtado"
+              value={fullName} onChange={(e) => setFullName(e.target.value)} className="field-input" />
+          </div>
+          <div className="field-group">
+            <label className="field-label" htmlFor="email">Correo electrónico</label>
+            <input id="email" type="email" required placeholder="tú@ejemplo.com"
+              value={email} onChange={(e) => setEmail(e.target.value)} className="field-input" />
+            <p className="field-hint">ℹ️&nbsp; Usa el mismo email que aparece en tu CV.</p>
+          </div>
+          <div className="field-group">
+            <label className="field-label" htmlFor="password">Contraseña</label>
+            <input id="password" type="password" required minLength={8} placeholder="Mínimo 8 caracteres"
+              value={password} onChange={(e) => setPassword(e.target.value)} className="field-input" />
           </div>
 
-          {/* Email */}
-          <div className="field-group">
-            <label className="field-label" htmlFor="email">
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="tú@ejemplo.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="field-input"
-            />
-            <p className="field-hint">
-              ℹ️&nbsp; Asegúrate de usar el mismo email que aparece en tu CV.
-            </p>
-          </div>
-
-          {/* Password */}
-          <div className="field-group">
-            <label className="field-label" htmlFor="password">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={8}
-              placeholder="Mínimo 8 caracteres"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="field-input"
-            />
-          </div>
-
-          {error && (
-            <p className="auth-error">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-primary mt-1"
-          >
+          {error && <p className="auth-error">{error}</p>}
+          <button type="submit" disabled={loading} className="btn-primary mt-1">
             {loading ? 'Creando cuenta…' : 'Continuar con email →'}
           </button>
         </form>
 
-        {/* Divider */}
-        <div className="auth-divider">
-          <span>o continúa con</span>
-        </div>
+        <div className="auth-divider"><span>o continúa con</span></div>
 
-        {/* Google SSO */}
         <button onClick={handleGoogle} className="btn-google">
           <GoogleIcon />
           Continuar con Google
         </button>
 
-        {/* Process steps */}
         <div className="process-steps-box">
-          <p className="process-steps-label">Tu recorrido en CV.AI</p>
+          <div className="process-steps-label">Tu recorrido en CV.AI</div>
           <div className="process-steps-row">
             {PROCESS_STEPS.map((step, i) => (
               <div key={i} className="process-step-item">
@@ -171,9 +116,7 @@ export default function RegisterPage() {
                 <p className={`process-step-label ${i === 0 ? 'process-step-label--active' : ''}`}>
                   {step.label}
                 </p>
-                {i < PROCESS_STEPS.length - 1 && (
-                  <div className="process-step-connector" />
-                )}
+                {i < PROCESS_STEPS.length - 1 && <div className="process-step-connector" />}
               </div>
             ))}
           </div>
@@ -181,9 +124,7 @@ export default function RegisterPage() {
 
         <p className="auth-footer-text">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="auth-link">
-            Iniciar sesión
-          </Link>
+          <Link href="/login" className="auth-link">Iniciar sesión</Link>
         </p>
       </div>
     </div>

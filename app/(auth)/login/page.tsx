@@ -1,5 +1,10 @@
 'use client'
 
+// app/(auth)/login/page.tsx
+// IMPORTANTE: force-dynamic evita que Next.js intente prerender esta página
+// en build time, lo que causaría el error de Supabase en Vercel/Railway.
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -9,10 +14,10 @@ export default function LoginPage() {
   const supabase = createClient()
   const router   = useRouter()
 
-  const [email, setEmail]     = useState('')
+  const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState<string | null>(null)
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState<string | null>(null)
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -27,7 +32,6 @@ export default function LoginPage() {
       return
     }
 
-    // Check if profile exists to decide where to redirect
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
       const { data: profile } = await supabase
@@ -42,9 +46,7 @@ export default function LoginPage() {
   async function handleGoogle() {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/auth/callback`,
-      },
+      options: { redirectTo: `${location.origin}/auth/callback` },
     })
   }
 
@@ -57,30 +59,15 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div className="field-group">
             <label className="field-label" htmlFor="email">Correo electrónico</label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="tú@ejemplo.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="field-input"
-            />
+            <input id="email" type="email" required placeholder="tú@ejemplo.com"
+              value={email} onChange={(e) => setEmail(e.target.value)} className="field-input" />
           </div>
-
           <div className="field-group">
             <label className="field-label" htmlFor="password">Contraseña</label>
-            <input
-              id="password"
-              type="password"
-              required
-              placeholder="Tu contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="field-input"
-            />
+            <input id="password" type="password" required placeholder="Tu contraseña"
+              value={password} onChange={(e) => setPassword(e.target.value)} className="field-input" />
             <div className="flex justify-end mt-1">
-              <Link href="/forgot-password" className="auth-link text-xs">
+              <Link href="/forgot-password" className="auth-link" style={{ fontSize: '0.75rem' }}>
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
