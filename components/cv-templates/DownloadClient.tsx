@@ -26,7 +26,7 @@ export default function DownloadClient({ cv }: Props) {
     setError(null)
 
     try {
-      const res = await fetch(`/api/cv/${cv.id}/download`, {
+      const res = await fetch(`/cv/${cv.id}/download`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ templateId: selected }),

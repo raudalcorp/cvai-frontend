@@ -2056,3 +2056,331 @@ textarea.field-input {
   font-size: 1.2rem;
   flex-shrink: 0;
 }
+
+
+/* ════════════════════════════════════════════════
+   CV.AI — Bloque 2 CSS additions
+   Append to globals.css (after Section 13)
+   ════════════════════════════════════════════════ */
+
+/* ─── CV title field (always visible at top of form) ── */
+.cv-title-field {
+  background: rgba(59, 130, 246, 0.04);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* ─── Photo preview image ─────────────────────────── */
+.photo-preview-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-accent);
+}
+
+/* ─── Form-level error ─────────────────────────────── */
+.form-error {
+  font-size: .8rem;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, .08);
+  border: 1px solid rgba(239, 68, 68, .25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+
+/* ─── Hidden input ─────────────────────────────────── */
+.hidden { display: none; }
+
+/* ════════════════════════════════════════════════
+   CV.AI — Download / Template Selection page
+   Append to globals.css
+   ════════════════════════════════════════════════ */
+
+/* ─── Layout ──────────────────────────────────────── */
+.dl-root { min-height: 100vh; background: var(--color-navy, #0a0e1a); display: flex; flex-direction: column; }
+
+.dl-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px 64px;
+}
+
+/* ─── Header ──────────────────────────────────────── */
+.dl-header { margin-bottom: 36px; }
+
+.dl-header-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 8px;
+}
+
+.dl-title {
+  font-family: var(--font-display-var);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.dl-sub {
+  font-size: 0.875rem;
+  color: var(--color-subtle);
+  max-width: 520px;
+  line-height: 1.6;
+}
+
+/* ─── Back link ───────────────────────────────────── */
+.dl-back-link {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.dl-back-link:hover { color: var(--color-text); }
+
+/* ─── Two-column layout ───────────────────────────── */
+.dl-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+@media (max-width: 860px) {
+  .dl-layout { grid-template-columns: 1fr; }
+  .dl-sidebar { order: -1; }
+}
+
+/* ─── Template grid ───────────────────────────────── */
+.dl-templates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .dl-templates { grid-template-columns: 1fr; }
+}
+
+/* ─── Template card ───────────────────────────────── */
+.tpl-card {
+  background: var(--color-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: 16px;
+  padding: 0;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tpl-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+.tpl-card--selected {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+
+/* ─── Mini CV preview ─────────────────────────────── */
+.tpl-preview {
+  background: #f8fafc;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.tpl-preview--split {
+  flex-direction: row;
+}
+
+.tpl-sidebar-strip {
+  width: 36%;
+  height: 100%;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.tpl-preview-content {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tpl-preview-name {
+  height: 10px;
+  border-radius: 3px;
+  width: 70%;
+  opacity: 0.85;
+}
+
+.tpl-preview-sub {
+  height: 6px;
+  border-radius: 3px;
+  background: #cbd5e1;
+  width: 50%;
+  margin-bottom: 4px;
+}
+
+.tpl-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.tpl-preview-heading {
+  height: 6px;
+  border-radius: 2px;
+  width: 40%;
+}
+
+.tpl-preview-line {
+  height: 5px;
+  border-radius: 2px;
+  background: #e2e8f0;
+  width: 90%;
+}
+
+.tpl-preview-line--short {
+  width: 65%;
+}
+
+/* ─── Template card footer ────────────────────────── */
+.tpl-card-footer {
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.tpl-card-name {
+  font-family: var(--font-display-var);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 3px;
+}
+
+.tpl-card-desc {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.tpl-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── Sidebar ─────────────────────────────────────── */
+.dl-sidebar-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 80px;
+}
+
+.dl-sidebar-section { display: flex; flex-direction: column; gap: 3px; }
+
+.dl-sidebar-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.dl-sidebar-value {
+  font-family: var(--font-display-var);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.dl-sidebar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dl-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-subtle);
+  background: rgba(100,116,139,0.12);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
+.dl-download-btn {
+  padding: 13px;
+  font-size: 0.9rem;
+  border-radius: 12px;
+}
+
+.dl-translate-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: var(--color-subtle);
+  text-decoration: none;
+  padding: 10px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.dl-translate-link:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.dl-error {
+  font-size: 0.78rem;
+  color: #fca5a5;
+  background: rgba(239,68,68,.08);
+  border: 1px solid rgba(239,68,68,.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 640px) {
+  .dl-main { padding: 24px 16px 48px; }
+  .dl-title { font-size: 1.5rem; }
+}
+
