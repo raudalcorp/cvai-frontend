@@ -1,10 +1,11 @@
+// app/cv/[id]/download/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import DownloadClient from '@/components/cv-templates/DownloadClient'
 
-interface Props {
-  params: Promise<{ id: string }>
-}
+interface Props { params: Promise<{ id: string }> }
 
 export default async function DownloadPage({ params }: Props) {
   const { id } = await params
@@ -13,7 +14,7 @@ export default async function DownloadPage({ params }: Props) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Fetch CV — RLS guarantees only the owner can access it
+  // FIX: sin profiles!inner — ese join causaba el 404
   const { data: cv, error } = await supabase
     .from('cv_documents')
     .select('id, title, language, content, status')
