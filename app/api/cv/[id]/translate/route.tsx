@@ -1,14 +1,10 @@
-// app/api/cv/[id]/translate/route.ts
 export const dynamic = 'force-dynamic'
-
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 
 const RAILWAY_URL = process.env.RAILWAY_API_URL
 
-interface Params { params: Promise<{ id: string }> }
-
-export async function POST(request: Request, { params }: Params) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
 
@@ -31,16 +27,16 @@ export async function POST(request: Request, { params }: Params) {
     const railwayRes = await fetch(`${RAILWAY_URL}/cv/translate`, {
       method: 'POST',
       headers: {
-        'Content-Type':   'application/json',
+        'Content-Type': 'application/json',
         'x-internal-key': process.env.INTERNAL_API_KEY ?? '',
-        'x-user-id':      user.id,
+        'x-user-id': user.id,
       },
       body: JSON.stringify({ cvData: cv.content, from, to }),
     })
 
     if (!railwayRes.ok) {
       const text = await railwayRes.text()
-      console.error('[translate BFF] Railway error:', text)
+      console.error('[translate] Railway error:', text)
       return NextResponse.json({ error: 'Error en la traducción.' }, { status: 500 })
     }
 
@@ -62,7 +58,7 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json({ newCvId: newCv.id, language: to })
   } catch (err) {
-    console.error('[translate BFF] Error:', err)
+    console.error('[translate] Error:', err)
     return NextResponse.json({ error: 'Error interno del servidor.' }, { status: 500 })
   }
 }

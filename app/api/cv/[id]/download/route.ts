@@ -1,68 +1,59 @@
+export const dynamic = 'force-dynamic'
 import { createClient } from '@/utils/supabase/server'
-import { NextResponse }  from 'next/server'
+import { NextResponse } from 'next/server'
 
 const RAILWAY_URL = process.env.RAILWAY_API_URL
 
-interface Params { params: Promise<{ id: string }> }
-
-export async function POST(request: Request, { params }: Params) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const { templateId } = await request.json()
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
-  // RLS: solo el dueño puede acceder
   const { data: cv } = await supabase
     .from('cv_documents')
-    .select('content, language, title')
+    .select('content, title')
     .eq('id', id)
     .eq('user_id', user.id)
     .single()
 
-  if (!cv) return NextResponse.json({ error: 'CV no encontrado.' }, { status: 404 })
-
-  const from = cv.language as 'es' | 'en'
-  const to   = from === 'es' ? 'en' : 'es'
+  if (!cv) return NextResponse.json({ error: 'CV no encontrado' }, { status: 404 })
 
   try {
-    // 1. Llamar a Railway para traducir
-    const railwayRes = await fetch(`${RAILWAY_URL}/cv/translate`, {
+    const railwayRes = await fetch(`${RAILWAY_URL}/cv/generate-pdf`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-internal-key': process.env.INTERNAL_API_KEY ?? '',
-        'x-user-id': user.id,
       },
-      body: JSON.stringify({ cvData: cv.content, from, to }),
+      body: JSON.stringify({ cvData: cv.content, templateId }),
     })
 
     if (!railwayRes.ok) {
       const text = await railwayRes.text()
-      console.error('[translate BFF] Railway error:', text)
-      return NextResponse.json({ error: 'Error en la traducción.' }, { status: 500 })
+      console.error('[download] Railway error:', text.slice(0, 300))
+      return NextResponse.json({ error: 'Error al generar el PDF.' }, { status: 500 })
     }
 
-    const translatedData = await railwayRes.json()
+    const contentType = railwayRes.headers.get('content-type') ?? ''
+    if (!contentType.includes('application/pdf')) {
+      const body = await railwayRes.text()
+      console.error('[download] Railway devolvió:', contentType, body.slice(0, 200))
+      return NextResponse.json({ error: `Railway no devolvió PDF. Content-Type: ${contentType}` }, { status: 500 })
+    }
 
-    // 2. Guardar el CV traducido como nuevo documento
-    const { data: newCv, error: insertError } = await supabase
-      .from('cv_documents')
-      .insert({
-        user_id:  user.id,
-        title:    `${cv.title} (${to.toUpperCase()})`,
-        language: to,
-        status:   'translated',
-        content:  translatedData,
-      })
-      .select('id')
-      .single()
-
-    if (insertError) throw insertError
-
-    return NextResponse.json({ newCvId: newCv.id, language: to })
+    const pdfBuffer = await railwayRes.arrayBuffer()
+    return new NextResponse(pdfBuffer, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${cv.title.replace(/\s+/g, '_')}_CV.pdf"`,
+      },
+    })
   } catch (err) {
-    console.error('[translate BFF] Error:', err)
-    return NextResponse.json({ error: 'Error interno del servidor.' }, { status: 500 })
+    console.error('[download] Network error:', err)
+    return NextResponse.json({ error: 'No se pudo conectar con Railway.' }, { status: 503 })
   }
 }
