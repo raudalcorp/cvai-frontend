@@ -17,16 +17,18 @@ interface Props {
 }
 
 export default function DownloadClient({ cv }: Props) {
-  const [selected, setSelected]   = useState<string>('classic')
+  const [selected, setSelected] = useState<string>('classic')
   const [downloading, setDownloading] = useState(false)
-  const [error, setError]         = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleDownload() {
     setDownloading(true)
     setError(null)
 
+    //path que ejecuta el fetch
+
     try {
-      const res = await fetch(`/cv/${cv.id}/download`, {
+      const res = await fetch(`/api/cv/${cv.id}/download`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ templateId: selected }),
@@ -39,9 +41,9 @@ export default function DownloadClient({ cv }: Props) {
 
       // Trigger browser download
       const blob = await res.blob()
-      const url  = URL.createObjectURL(blob)
-      const a    = document.createElement('a')
-      a.href     = url
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
       a.download = `${cv.title.replace(/\s+/g, '_')}_CV.pdf`
       document.body.appendChild(a)
       a.click()
@@ -205,8 +207,8 @@ function TemplateCard({
 function DownloadIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <path d="M12 3v13M7 11l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M12 3v13M7 11l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 21h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }
@@ -214,8 +216,8 @@ function DownloadIcon() {
 function GlobeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
-      <path d="M12 3c-2.5 3-4 5.5-4 9s1.5 6 4 9M12 3c2.5 3 4 5.5 4 9s-1.5 6-4 9M3 12h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M12 3c-2.5 3-4 5.5-4 9s1.5 6 4 9M12 3c2.5 3 4 5.5 4 9s-1.5 6-4 9M3 12h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
