@@ -60,13 +60,26 @@ function Navbar() {
 ───────────────────────────────────────── */
 function HeroSection() {
   return (
-    <section className="relative z-10 flex min-h-[90vh] w-full flex-col items-center justify-center px-6 pb-20 pt-32 text-center">
+    <section className="relative z-10 flex min-h-[90vh] w-full flex-col items-center justify-center px-6 pb-0 pt-32 text-center">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center">
 
         {/* Badge */}
-        <div className="mb-9 inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-cvai-indigo/30 bg-cvai-indigo-dim px-3 py-1.5 text-sm text-cvai-indigo-light">
-          <span className="h-1.5 w-1.5 rounded-full bg-cvai-indigo-light" />
-          Powered by Azure OpenAI + Claude AI
+        <div className="mb-9 inline-flex animate-fade-in-up items-center gap-4 text-sm">
+          <Link
+            href="/architecture"
+            className="inline-flex items-center gap-1.5 rounded-full border border-cvai-indigo/30 bg-cvai-indigo-dim px-3 py-1.5 text-cvai-indigo-light no-underline transition-colors hover:bg-cvai-indigo/20"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-cvai-indigo-light" />
+            Architecture diagram
+          </Link>
+          <Link
+            href="https://github.com/raudalcorp"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 rounded-full border border-cvai-indigo/30 bg-cvai-indigo-dim px-3 py-1.5 text-cvai-indigo-light no-underline transition-colors hover:bg-cvai-indigo/20"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-cvai-indigo-light" />
+            GitHub
+          </Link>
         </div>
 
         {/* Headline */}
@@ -78,8 +91,8 @@ function HeroSection() {
 
         {/* Subtext */}
         <p className="animate-fade-in-up animate-delay-200 mb-11 max-w-[560px] text-[clamp(16px,2vw,20px)] leading-relaxed text-cvai-text2">
-          Sube tu CV, la IA lo valida, corrige y traduce. Encuentra ofertas de
-          empleo con afinidad real. Todo en minutos.
+          Sube o crea tu CV desde cero, la IA lo optimiza en el idioma que
+          prefieras, descarga y aplica.
         </p>
 
         {/* CTAs */}
@@ -207,7 +220,7 @@ const features = [
 
 function FeaturesSection() {
   return (
-    <section className="relative z-10 w-full py-20">
+    <section className="relative z-10 w-full pt-10 pb-20">
       <div className="mx-auto max-w-6xl px-6">
         <p className="mb-3 text-xs font-medium uppercase tracking-widest text-cvai-indigo-light">
           Funcionalidades
