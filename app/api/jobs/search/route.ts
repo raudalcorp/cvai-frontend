@@ -2,9 +2,9 @@
 // BFF — validates auth, enriches with user's CV data, proxies to Railway.
 
 import { createClient } from '@/utils/supabase/server'
-import { NextResponse }  from 'next/server'
+import { NextResponse } from 'next/server'
 
-const RAILWAY_URL = process.env.RAILWAY_API_URL
+const BACKEND_URL = process.env.RENDER_API_URL
 
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const res = await fetch(`${RAILWAY_URL}/jobs/search`, {
+    const res = await fetch(`${BACKEND_URL}/jobs/search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
