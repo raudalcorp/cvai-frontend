@@ -2,8 +2,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 
-const RAILWAY_URL = process.env.RAILWAY_API_URL
-
+const RAILWAY_URL = process.env.RENDER_API_URL
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -21,7 +20,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!cv) return NextResponse.json({ error: 'CV no encontrado.' }, { status: 404 })
 
   const from = cv.language as 'es' | 'en'
-  const to   = from === 'es' ? 'en' : 'es'
+  const to = from === 'es' ? 'en' : 'es'
 
   try {
     const railwayRes = await fetch(`${RAILWAY_URL}/cv/translate`, {
@@ -45,11 +44,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const { data: newCv, error: insertError } = await supabase
       .from('cv_documents')
       .insert({
-        user_id:  user.id,
-        title:    `${cv.title} (${to.toUpperCase()})`,
+        user_id: user.id,
+        title: `${cv.title} (${to.toUpperCase()})`,
         language: to,
-        status:   'translated',
-        content:  translatedData,
+        status: 'translated',
+        content: translatedData,
       })
       .select('id')
       .single()
