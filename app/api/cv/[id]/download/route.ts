@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 
-const RAILWAY_URL = process.env.RAILWAY_API_URL
+const RAILWAY_URL = process.env.RENDER_API_URL
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
